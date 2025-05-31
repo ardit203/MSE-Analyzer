@@ -1,0 +1,8 @@
+#version: '3.9'
+
+services:
+  django-mse-analyzer:
+    build: .
+    ports:
+      - "8000:8000"
+    container_name: django-mse-analyzer
