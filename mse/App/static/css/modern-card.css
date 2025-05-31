@@ -1,0 +1,74 @@
+/* Modern Card Styles */
+    .card-modern {
+        background: white;
+        border-radius: 1rem;
+        border: none;
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .card-modern:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-modern .card-header {
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        padding: 1.5rem;
+    }
+
+    .card-modern .card-body {
+        padding: 1.5rem;
+    }
+
+    .card-modern .card-footer {
+        background: var(--background-color);
+        border-top: 1px solid var(--border-color);
+        padding: 1rem 1.5rem;
+    }
+
+    .card-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .card-icon i {
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .card-stats {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+    }
+
+    .card-stats i {
+        color: var(--primary-color);
+    }
+
+    .card-progress {
+        height: 6px;
+        background: var(--border-color);
+        border-radius: 3px;
+        margin: 1rem 0;
+        overflow: hidden;
+    }
+
+    .card-progress-bar {
+        height: 100%;
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }

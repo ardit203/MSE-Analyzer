@@ -1,0 +1,473 @@
+{% extends "base.html" %}
+
+{% load static%}
+
+{% block title %}{{lang_data.technical.title}}{% endblock %}
+
+{% block head %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icon-css/css/flag-icons.min.css">
+<link rel="stylesheet" href="{% static 'css/form.css'%}">
+<link rel="stylesheet" href="{% static 'css/issuers-table.css'%}">
+<link rel="stylesheet" href="{% static 'css/modern-card.css'%}">
+<style>
+    @media (max-width: 768px) {
+        .chart-container {
+            height: 300px;
+        }
+    }
+
+    .chart-container {
+            height: 40vh;
+        }
+
+    .card-header {
+        border-top-left-radius: 1rem !important;
+        border-top-right-radius: 1rem !important;
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        color: white;
+    }
+
+    .buy {
+        color: #059669 !important;
+        /*background-color: rgba(5, 150, 105, 0.1) !important;*/
+    }
+
+    .sell {
+        color: #DC2626 !important;
+        /*background-color: rgba(220, 38, 38, 0.1) !important;*/
+    }
+
+    .hold {
+        color: #6B7280 !important; /* Gray-500 from Tailwind */
+        /*background-color: rgba(107, 114, 128, 0.1) !important;*/
+    }
+</style>
+
+<style class="table-design">
+
+
+    .table-modern td {
+        padding: 0.8rem 0.5rem;
+        color: var(--text-color);
+        font-size: 0.95rem;
+        vertical-align: middle;
+    }
+
+    .table-modern .price::before {
+        content: '';
+        position: absolute;
+        left: 0.7rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 6px;
+        background: var(--primary-color);
+        border-radius: 50%;
+    }
+
+    /* Container styling */
+    .tab-cont {
+    max-height: 340px !important;
+    /*overflow-y: visible !important;*/
+  }
+
+
+</style>
+{% endblock %}
+
+{% block page_title %}{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid p-0 default-down">
+    <h2 class="p-0 mt-5 txt-secondary">{{lang_data.technical.title}}</h2>
+    <div class="card shadow borders mt-5">
+        <div class="card-body">
+            <form id="filter-form" method="post" action="{% url 'technical' lang %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        {{ form.issuer.label_tag }}
+                        {{form.issuer}}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.start_date.label_tag }}
+                        {{form.start_date}}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.end_date.label_tag }}
+                        {{form.end_date}}
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="btn px-4 btn-dsg borders shadow-sm">🔍
+                            <span>{{lang_data.analyze_button}}</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid p-0 default-up default-down">
+    <h2 class="p-0 mt-5 txt-secondary">{{lang_data.technical.chart}}</h2>
+    <div class="card shadow borders mt-5">
+        <div class="card-body">
+            <div id="chart" class="chart-container"></div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid p-0 default-up default-down">
+    <h2 class="p-0 mt-5">{{lang_data.technical.tech_summary}}</h2>
+    <div class="row g-4 mt-3">
+        <div class="col-md-6 col-lg-4">
+            <div class="card-modern news-card market-update">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="h5 mb-0" title='{{lang_data.technical.ma_summary}}'>{{lang_data.technical.ma_summary_short}}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="market-stats">
+                        <div class="d-flex justify-content-center mb-3">
+                            <span class="fs-4 me-2">{{lang_data.technical.buy}}: </span>
+                            <span class="fs-4 buy">{{summary.ma_count.buy}}</span>
+                        </div>
+                        <div class="d-flex justify-content-center mb-3">
+                            <span class="fs-4 me-2">{{lang_data.technical.sell}}: </span>
+                            <span class="fs-4 sell">{{summary.ma_count.sell}}</span>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <span class="fs-4 me-2">{{lang_data.technical.hold}}: </span>
+                            <span class="fs-4 hold">{{summary.ma_count.hold}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card-modern news-card market-update">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-list-alt"></i>
+                    </div>
+                    <h3 class="h5 mb-0">{{lang_data.technical.overall_summary}}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="market-stats">
+                        <div class="d-flex justify-content-center mb-3">
+                            <span class="fs-4 me-2">{{lang_data.technical.buy}}: </span>
+                            <span class="fs-4 buy">{{summary.overall.buy}}</span>
+                        </div>
+                        <div class="d-flex justify-content-center mb-3">
+                            <span class="fs-4 me-2">{{lang_data.technical.sell}}: </span>
+                            <span class="fs-4 sell">{{summary.overall.sell}}</span>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <span class="fs-4 me-2">{{lang_data.technical.hold}}: </span>
+                            <span class="fs-4 hold">{{summary.overall.hold}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card-modern news-card market-update">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-wave-square"></i>
+                    </div>
+                    <h3 class="h5 mb-0">{{lang_data.technical.osc_summary}}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="market-stats">
+                        <div class="d-flex justify-content-center mb-3">
+                            <span class="fs-4 me-2">{{lang_data.technical.buy}}: </span>
+                            <span class="fs-4 buy">{{summary.osc_count.buy}}</span>
+                        </div>
+                        <div class="d-flex justify-content-center mb-3">
+                            <span class="fs-4 me-2">{{lang_data.technical.sell}}: </span>
+                            <span class="fs-4 sell">{{summary.osc_count.sell}}</span>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <span class="fs-4 me-2">{{lang_data.technical.hold}}: </span>
+                            <span class="fs-4 hold">{{summary.osc_count.hold}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid p-0 default-up default-down">
+    <div class="row g-4 justify-content-start">
+        <div class="col-md-6 col-lg-6">
+            <h2 class="p-0 mb-3">{{lang_data.technical.ma}}</h2>
+            <div class="shadow bg-white tab-cont table-responsive mt-5">
+
+                {% if moving_averages %}
+                <table class="table table-modern m-0">
+                    <thead>
+                    <tr>
+                        <th>{{lang_data.technical.table.indicator}}</th>
+                        <th>{{lang_data.technical.table.timeframe}}</th>
+                        <th>{{lang_data.technical.table.value}}</th>
+                        <th>{{lang_data.technical.table.signal}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for ma in moving_averages %}
+                    <tr>
+                        <td class="price">{{ ma.indicator_type }}</td>
+                        <td>{{ ma.timeframe }}</td>
+                        <td class="avg format-decimal">{{ ma.value }}</td>
+                        <td class="chg {% if ma.signal == 'buy'%}positive{% elif ma.signal == 'sell' %}negative{% else %}neutral{% endif %}">
+                            {{ ma.signal | upper }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="alert alert-warning text-center m-0 p-5" role="alert">
+                    No technical data available.
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+        <div class="col-md-6 col-lg-6">
+            <h2 class="p-0 mb-3">{{lang_data.technical.osc}}</h2>
+            <div class="shadow bg-white tab-cont table-responsive mt-5">
+
+                {% if oscillators %}
+                <table class="table table-modern m-0">
+                    <thead>
+                    <tr>
+                        <th>{{lang_data.technical.table.indicator}}</th>
+                        <th>{{lang_data.technical.table.timeframe}}</th>
+                        <th>{{lang_data.technical.table.value}}</th>
+                        <th>{{lang_data.technical.table.signal}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for osc in oscillators %}
+                    <tr>
+                        <td class="price">{{ osc.indicator_type }}</td>
+                        <td>{{ osc.timeframe }}</td>
+                        <td class="avg format-decimal">{{ osc.value }}</td>
+                        <td class="chg {% if osc.signal == 'buy'%}positive{% elif osc.signal == 'sell' %}negative{% else %}neutral{% endif %}">
+                            {{ osc.signal | upper }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="alert alert-warning text-center m-0 p-5" role="alert">
+                    No technical data available.
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script class="candlestick-chart">
+    const stock_data = JSON.parse('{{ stock|escapejs }}');
+    const date = stock_data.date;
+    const price = stock_data.price;
+    const max = stock_data.max;
+    const min = stock_data.min;
+    const avg = stock_data.avg;
+
+    // Language code, e.g. 'en', 'mk', 'al'
+    const lang = "{{lang}}";
+
+    const localeMap = {
+        'en': 'en-US',
+        'mk': 'de-DE',
+        'al': 'de-DE'
+    };
+    const dateFormat = {
+        'en': '%m/%d/%Y',
+        'al': '%d.%m.%Y',
+        'mk': '%d.%m.%Y'
+    };
+
+    const locale = localeMap[lang] || 'en-US';
+
+    const combined = stock_data.date.map((label, i) => ({
+        date: new Date(label),
+        label: label,
+        open: stock_data.price[i],
+        close: stock_data.avg[i],
+        high: stock_data.max[i],
+        low: stock_data.min[i]
+    })).sort((a, b) => a.date - b.date);
+
+    const sortedLabels = combined.map(item => item.label);
+    const sortedOpen = combined.map(item => item.open);
+    const sortedClose = combined.map(item => item.close);
+    const sortedHigh = combined.map(item => item.high);
+    const sortedLow = combined.map(item => item.low);
+
+    const custom = combined.map(item => ([
+        item.date.toLocaleDateString(locale),
+        item.open.toLocaleString(locale),
+        item.high.toLocaleString(locale),
+        item.low.toLocaleString(locale),
+        item.close.toLocaleString(locale)
+    ]));
+
+    const allPrices = [...sortedOpen, ...sortedClose, ...sortedHigh, ...sortedLow].map(Number).filter(v => !isNaN(v));
+    const minY = Math.min(...allPrices);
+    const maxY = Math.max(...allPrices);
+    const range = maxY - minY;
+    const step = range === 0 ? 1 : Math.ceil(range / 5);
+
+    const tickvals = [];
+    for (let val = Math.floor(minY / step) * step; val <= maxY; val += step) {
+        tickvals.push(val);
+    }
+    const ticktext = tickvals.map(val => val.toLocaleString(locale));
+
+    // Your original candlestick trace - disable hover (so scatter takes over)
+    const trace1 = {
+        x: sortedLabels,
+        open: sortedOpen,
+        high: sortedHigh,
+        low: sortedLow,
+        close: sortedClose,
+        type: 'candlestick',
+        increasing: { line: { color: '#059669' } },
+        decreasing: { line: { color: '#DC2626' } },
+        // customdata: custom,
+        hoverinfo: 'skip'  // Disable default hover info on candle
+    };
+
+    const labels = {
+        date: "{{lang_data.hover_template.date}}",    // or get this dynamically based on locale/translation
+        open: "{{lang_data.hover_template.open}}",
+        high: "{{lang_data.hover_template.high}}",
+        low: "{{lang_data.hover_template.low}}",
+        close: "{{lang_data.hover_template.close}}"
+    };
+
+    // Transparent scatter trace for hover with full custom hovertemplate
+    const trace2 = {
+        x: sortedLabels,
+        y: sortedClose,  // can use close price for y positioning
+        mode: 'markers',
+        marker: { opacity: 0, size: 20 },  // Invisible but large enough for easy hover
+        hoverinfo: 'text',
+        hovertext: combined.map(item =>
+            `<b>${labels.date}:</b> ${new Intl.DateTimeFormat(locale, {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            }).format(item.date)}<br>` +
+            `<b>${labels.open}:</b> ${item.open.toLocaleString(locale)}<br>` +
+            `<b>${labels.high}:</b> ${item.high.toLocaleString(locale)}<br>` +
+            `<b>${labels.low}:</b> ${item.low.toLocaleString(locale)}<br>` +
+            `<b>${labels.close}:</b> ${item.close.toLocaleString(locale)}`
+        )
+    };
+
+    const layout = {
+        dragmode: 'zoom',
+        showlegend: false,
+        responsive: true,
+        autosize: true,
+        margin: { l: 60, r: 20, b: 50, t: 20 },
+        xaxis: {
+            tickformat: dateFormat[lang] || '%m/%d/%Y',
+            tickfont: { size: 10, family: 'Arial, sans-serif' },
+            rangeslider: { visible: false },
+            gridcolor: '#ddd',
+            type: 'date'
+        },
+        yaxis: {
+            tickvals: tickvals,
+            ticktext: ticktext,
+            tickfont: { size: 10, family: 'Arial, sans-serif' },
+            gridcolor: '#ddd'
+        },
+        hoverlabel: {
+            font: { color: 'white' },
+            bgcolor: '#2563eb',
+            bordercolor: 'white',
+            borderwidth: 1
+        },
+        hovermode: 'closest'  // so hover shows only on closest point
+    };
+
+    Plotly.newPlot('chart', [trace1, trace2], layout);
+
+    window.addEventListener('resize', () => {
+        Plotly.Plots.resize('chart');
+    });
+</script>
+
+<script class="language-switch">
+    document.querySelectorAll('.lang-option').forEach(item => {
+        item.addEventListener('click', function (e) {
+            e.preventDefault();
+            const selectedLang = this.getAttribute('data-lang');
+            const issuer = document.querySelector('[name="issuer"]');
+            const start_date = document.querySelector('[name="start_date"]');
+            const end_date = document.querySelector('[name="end_date"]');
+
+
+            const queryParams = {
+                "issuer": issuer ? issuer.value : null,
+                "start_date": start_date ? start_date.value : null,
+                "end_date": end_date ? end_date.value : null
+            };
+
+            // Save to session
+            fetch('/save_query_params/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()  // make sure you have a csrf token function
+                },
+                body: JSON.stringify(queryParams)
+            }).then(response => {
+                // After saving, redirect to new language URL
+                if (response.ok) {
+                    window.location.href = '/' + selectedLang + window.location.pathname.substring(3);
+                    // assumes your URLs are prefixed like /en/, /mk/, etc.
+                }
+            });
+        });
+    });
+
+
+    function getCSRFToken() {
+        let cookieValue = null;
+        const name = 'csrftoken';
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
+{% endblock %}

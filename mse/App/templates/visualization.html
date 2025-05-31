@@ -1,0 +1,343 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}{{lang_data.visualization.title}}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/form.css'%}">
+<!-- Use a specific, recent version -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+<style>
+    .chart-card {
+        height: 400px;
+        margin-bottom: 20px;
+    }
+
+    .chart-container {
+        padding: 0;
+        height: 100%;
+        width: 100%;
+    }
+
+
+    .card-header {
+        border-top-left-radius: 1rem !important;
+        border-top-right-radius: 1rem !important;
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        color: white;
+    }
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="container-fluid p-0 default-down">
+    <h2 class="p-0 mt-5 txt-secondary">{{lang_data.visualization.title}}</h2>
+    <div class="card shadow borders mb-4 mt-5">
+        <div class="card-body">
+            <form id="filter-form" method="post" action="{% url 'visualization' lang %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        {{ form.issuer.label_tag }}
+                        {{form.issuer}}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.start_date.label_tag }}
+                        {{form.start_date}}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.end_date.label_tag }}
+                        {{form.end_date}}
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="btn px-4 btn-dsg borders shadow-sm">🔍
+                            <span>{{lang_data.issuers_data_button}}</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="row g-4 mt-3">
+        <!-- Line Chart Card -->
+        <div class="col-md-6">
+            <div class="card shadow borders chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0 text-center">{{lang_data.visualization.chart.price}}</h5>
+                </div>
+                <div class="card-body p-2">
+                    <div id="price-chart" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow borders chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0 text-center">{{lang_data.visualization.chart.max}}</h5>
+                </div>
+                <div class="card-body p-2">
+                    <div id="max-chart" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow borders chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0 text-center">{{lang_data.visualization.chart.min}}</h5>
+                </div>
+                <div class="card-body p-2">
+                    <div id="min-chart" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow borders chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0 text-center">{{lang_data.visualization.chart.avg}}</h5>
+                </div>
+                <div class="card-body p-2">
+                    <div id="avg-chart" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow borders chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0 text-center">{{lang_data.visualization.chart.chg}}</h5>
+                </div>
+                <div class="card-body p-2">
+                    <div id="chg-chart" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow borders chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0 text-center">{{lang_data.visualization.chart.volume}}</h5>
+                </div>
+                <div class="card-body p-2">
+                    <div id="volume-chart" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow borders chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0 text-center">{{lang_data.visualization.chart.turnover}}</h5>
+                </div>
+                <div class="card-body p-2">
+                    <div id="turnover-chart" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow borders chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0 text-center">{{lang_data.visualization.chart.total}}</h5>
+                </div>
+                <div class="card-body p-2">
+                    <div id="total-turnover-chart" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function config(id, chartData, labels, color, lang) {
+        // Generate tick values (every 2000 units)
+        const combined = labels.map((label, i) => ({
+    date: new Date(label),
+    label: label,
+    value: chartData[i]
+})).sort((a, b) => a.date - b.date);
+
+// Extract sorted values
+const sortedLabels = combined.map(item => item.label);
+const sortedData = combined.map(item => item.value);
+
+
+        const numericData = sortedData.map(Number).filter(val => !isNaN(val));
+        const minY = Math.min(...numericData);
+        const maxY = Math.max(...numericData);
+        const range = maxY - minY;
+        const step = range === 0 ? 1 : Math.ceil(range / 5);  // avoid 0 step
+
+// Generate tick values
+        const tickvals = [];
+        for (let val = Math.floor(minY / step) * step; val <= maxY; val += step) {
+            tickvals.push(val);
+        }
+
+// Determine locale based on language
+        const localeMap = {
+            'en': 'en-US',
+            'mk': 'de-DE',
+            'al': 'de-DE'
+        };
+
+        const dateFormat = {
+            'en': '%m/%d/%Y',
+            'al': '%d.%m.%Y',
+            'mk': '%d.%m.%Y'
+        }
+
+        let locale = localeMap[lang] || 'en-US';
+        console.log(`Using locale: ${locale}`);
+
+// Format tick labels based on locale
+        const ticktext = tickvals.map(val => val.toLocaleString(locale));
+
+// Create the chart trace
+
+        const dateLabel = "{{lang_data.hover_template.date}}";      // or any localized/variable value
+        const valueLabel = "{{lang_data.hover_template.value}}";    // or any localized/variable value
+
+        const hovertemplate = `${dateLabel}: %{x}<br>${valueLabel}: %{customdata}<extra></extra>`;
+        const trace1 = {
+            x: sortedLabels,
+            y: sortedData,
+            customdata: chartData.map(val => Number(val).toLocaleString(locale)),
+            type: 'scatter',
+            mode: 'lines+markers',
+            line: {
+                color: color,
+                width: 2
+            },
+            marker: {
+                color: '#1e40af'
+            },
+            hovertemplate: hovertemplate
+        };
+
+        const data = [trace1];
+
+        const layout = {
+            margin: {
+                l: 70,  // <-- Increase this value for more space on the left
+                r: 20,
+                t: 40,
+                b: 40
+            },
+            xaxis: {
+                gridcolor: '#ddd',
+                tickfont: {size: 10, family: 'Arial, sans-serif'},
+                ticks: 'outside',
+                tickformat: dateFormat[lang],
+                showgrid: true,
+
+            },
+            yaxis: {
+                tickvals: tickvals,
+                ticktext: ticktext,
+                tickfont: {size: 10, family: 'Arial, sans-serif'},
+                ticks: 'outside',
+                gridcolor: '#ddd',
+                showgrid: true
+            },
+            hoverlabel: {
+                font: {color: 'white'},
+                bgcolor: '#2563eb',
+                bordercolor: 'white',
+                borderwidth: 1,
+            },
+            dragmode: 'zoom',
+            transition: {
+                duration: 500,
+                easing: 'quad-in-out'
+            }
+        };
+
+        Plotly.react(id, data, layout);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const data = JSON.parse('{{ data|escapejs }}');
+        const date = data.date;
+        const price = data.price;
+        console.log(date)
+        console.log(price)
+        const max = data.max;
+        const min = data.min;
+        const avg = data.avg;
+        const chg = data.chg;
+        const volume = data.volume;
+        const turnover = data.turnover;
+        const total_turnover = data.total_turnover;
+
+        config('price-chart', price, date, '#2563eb', "{{lang}}");
+        config('max-chart', max, date, '#2563eb', "{{lang}}");
+        config('min-chart', min, date, '#2563eb', "{{lang}}");
+        config('avg-chart', avg, date, '#2563eb', "{{lang}}");
+        config('chg-chart', chg, date, '#2563eb', "{{lang}}");
+        config('volume-chart', volume, date, '#2563eb', "{{lang}}");
+        config('turnover-chart', turnover, date, '#2563eb', "{{lang}}");
+        config('total-turnover-chart', total_turnover, date, '#2563eb', "{{lang}}");
+
+
+    });
+
+</script>
+
+<script class="language-switch">
+    document.querySelectorAll('.lang-option').forEach(item => {
+        item.addEventListener('click', function (e) {
+            e.preventDefault();
+            const selectedLang = this.getAttribute('data-lang');
+            const issuer = document.querySelector('[name="issuer"]');
+            const start_date = document.querySelector('[name="start_date"]');
+            const end_date = document.querySelector('[name="end_date"]');
+
+
+
+            const queryParams = {
+    "issuer": issuer ? issuer.value : null,
+    "start_date": start_date ? start_date.value : null,
+    "end_date": end_date ? end_date.value : null
+};
+
+            // Save to session
+            fetch('/save_query_params/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()  // make sure you have a csrf token function
+                },
+                body: JSON.stringify(queryParams)
+            }).then(response => {
+                // After saving, redirect to new language URL
+                if (response.ok) {
+                    window.location.href = '/' + selectedLang + window.location.pathname.substring(3);
+                    // assumes your URLs are prefixed like /en/, /mk/, etc.
+                }
+            });
+        });
+    });
+
+
+    function getCSRFToken() {
+      let cookieValue = null;
+      const name = 'csrftoken';
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+</script>
+{% endblock %}

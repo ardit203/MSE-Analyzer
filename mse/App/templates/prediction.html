@@ -1,0 +1,420 @@
+{% extends "base.html" %}
+
+{% load static%}
+
+{% block title %}{{lang_data.predictions.title}}{% endblock %}
+
+{% block head %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/modern-card.css'%}">
+<link rel="stylesheet" href="{% static 'css/form.css'%}">
+<link rel="stylesheet" href="{% static 'css/issuers-table.css'%}">
+<style>
+
+    .table-modern {
+    display: table !important;
+}
+
+    .chart-container {
+        width: 100%;
+        height: 40vh;
+        padding: 0;
+    }
+
+    .chart-card {
+        height: 40vh;
+        margin-bottom: 20px;
+    }
+
+
+
+
+    .card-header {
+        border-top-left-radius: 1rem !important;
+        border-top-right-radius: 1rem !important;
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .chart-container {
+            height: 350px;
+        }
+    }
+
+    .metric-card {
+        transition: all 0.3s ease;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .metric-value {
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+</style>
+
+{% endblock %}
+
+{% block page_title %}{% endblock %}
+
+{% block content %}
+<!-- Filter Form -->
+<div class="container-fluid p-0 default-down">
+    <h2 class="p-0 mt-5 txt-secondary">{{lang_data.prediction.title}}</h2>
+    <div class="card shadow borders mt-5">
+        <div class="card-body">
+            <form id="filter-form" method="post" action="{% url 'prediction' lang %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row g-3 justify-content-center">
+                    <div class="col-md-4">
+                        {{ form.issuer.label_tag }}
+                        {{form.issuer}}
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="btn px-4 btn-dsg borders shadow-sm">🔍
+                            <span>{{lang_data.predict_button}}</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Price Chart -->
+<div class="container-fluid p-0 default-down default-up">
+    <h2 class="p-0 mt-5 txt-secondary">{{lang_data.prediction.price_chart}} - {{metrics.issuer.code}}</h2>
+    <div class="card shadow borders mt-5">
+        <div class="card-header">
+            <h5 class="mb-0">{{lang_data.prediction.price_chart}}</h5>
+        </div>
+        <div class="card-body">
+            <div id="chart" class="chart-container"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Model Metrics -->
+<div class="container-fluid p-0 default-up default-down">
+    <h2 class="mb-3">{{lang_data.prediction.model_metrics}}</h2>
+    <div class="row g-3 mt-5">
+        <!--        R2-->
+        <div class="col-md-4">
+            <div class="card shadow metric-card">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-2">{{lang_data.prediction.metrics.r2_score}}</h6>
+                    <div class="metric-value format-decimal">{{metrics.r2_score}}</div>
+                </div>
+            </div>
+        </div>
+        <!--        MSE-->
+        <div class="col-md-4">
+            <div class="card shadow metric-card">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-2">{{lang_data.prediction.metrics.mse}}</h6>
+                    <div class="metric-value format-decimal">{{metrics.mse}}</div>
+                </div>
+            </div>
+        </div>
+        <!--        MAE-->
+        <div class="col-md-4">
+            <div class="card shadow metric-card">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-2">{{lang_data.prediction.metrics.mae}}</h6>
+                    <div class="metric-value format-decimal">{{metrics.mae}}</div>
+                </div>
+            </div>
+        </div>
+
+        <!--        MAPE-->
+        <div class="col-md-4">
+            <div class="card shadow metric-card">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-2">{{lang_data.prediction.metrics.mape}}</h6>
+                    <div class="metric-value format-decimal">{{metrics.mape}}%</div>
+                </div>
+            </div>
+        </div>
+
+        <!--        MSLE-->
+        <div class="col-md-4">
+            <div class="card shadow metric-card">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-2">{{lang_data.prediction.metrics.msle}}</h6>
+                    <div class="metric-value format-decimal">{{metrics.msle}}</div>
+                </div>
+            </div>
+        </div>
+
+         <!--        EVS-->
+        <div class="col-md-4">
+            <div class="card shadow metric-card">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-2">{{lang_data.prediction.metrics.max}}</h6>
+                    <div class="metric-value format-decimal">{{metrics.max}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Latest Predictions -->
+
+<div class="container-fluid p-0 default-up default-down">
+    <div class="row g-4 justify-content-start">
+        <div class="col-md-6 col-lg-6">
+            <h2 class="p-0 mb-3">{{lang_data.prediction.predicted_prices}}</h2>
+            <div class="shadow bg-white tab-cont table-responsive mt-5">
+                {% if data %}
+                <table class="table table-modern m-0">
+                    <thead>
+                    <tr>
+                        <th>{{lang_data.prediction.table.date}}</th>
+                        <th>{{lang_data.prediction.table.pred_price}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for datum in data %}
+                    <tr>
+                        <td class="date format-date">{{ datum.date }}</td>
+                        <td class="avg format-decimal {% if datum.predicted_price > last_price%}positive{% elif datum.predicted_price < last_price %}negative{% else %}neutral{% endif %}">
+                            {{ datum.predicted_price }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="alert alert-warning text-center m-0 p-5" role="alert">
+                    No prices were predicted.
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="col-md-6 col-lg-6">
+            <h2 class="p-0 mb-3">{{lang_data.prediction.last_prices}}</h2>
+            <div class="shadow bg-white tab-cont table-responsive mt-5">
+                {% if last_stock %}
+                <table class="table table-modern m-0">
+                    <thead>
+                    <tr>
+                        <th>{{lang_data.prediction.table.date}}</th>
+                        <th>{{lang_data.prediction.table.price}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for datum in last_stock %}
+                    <tr>
+                        <td class="date format-date">{{ datum.date }}</td>
+                        <td class="price format-decimal ">
+                            {{ datum.price }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="alert alert-warning text-center m-0 p-5" role="alert">
+                    No prices were predicted.
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<script class="prediction-chart">
+    const prediction_data = JSON.parse('{{ chart_data|escapejs }}');
+    const lang = '{{lang}}'; // assumed passed from backend
+
+    const colorActual = '#2563eb';
+    const colorPredicted = '#16a34a';
+
+    const date = prediction_data.date;
+    const price = prediction_data.price.map(Number);
+    const pred_date = prediction_data.pred_date;
+    const pred_price = prediction_data.pred_price.map(Number);
+
+    // Combine and sort actual + predicted
+    const combined = date.map((d, i) => ({
+        date: new Date(d),
+        label: d,
+        value: price[i],
+        isPredicted: false
+    })).concat(pred_date.map((d, i) => ({
+        date: new Date(d),
+        label: d,
+        value: pred_price[i],
+        isPredicted: true
+    }))).sort((a, b) => a.date - b.date);
+
+    const sortedLabels = combined.map(item => item.label);
+    const sortedData = combined.map(item => item.value);
+    const isPredictedFlags = combined.map(item => item.isPredicted);
+
+    // Locale settings
+    const localeMap = {
+        'en': 'en-US',
+        'mk': 'de-DE',
+        'al': 'de-DE'
+    };
+    const dateFormat = {
+        'en': '%m/%d/%Y',
+        'al': '%d.%m.%Y',
+        'mk': '%d.%m.%Y'
+    };
+    const locale = localeMap[lang] || 'en-US';
+
+    // Y-axis ticks
+    const numericData = sortedData.filter(val => !isNaN(val));
+    const minY = Math.min(...numericData);
+    const maxY = Math.max(...numericData);
+    const range = maxY - minY;
+    const step = range === 0 ? 1 : Math.ceil(range / 5);
+    const tickvals = [];
+    for (let val = Math.floor(minY / step) * step; val <= maxY; val += step) {
+        tickvals.push(val);
+    }
+    const ticktext = tickvals.map(val => val.toLocaleString(locale));
+
+    const dateLabel = "{{lang_data.hover_template.date}}";      // or any localized/variable value
+        const valueLabel = "{{lang_data.hover_template.value}}";    // or any localized/variable value
+
+        const hovertemplate = `${dateLabel}: %{x}<br>${valueLabel}: %{customdata}<extra></extra>`;
+
+    // Trace 1: Actual prices
+    const traceActual = {
+        x: sortedLabels.filter((_, i) => !isPredictedFlags[i]),
+        y: sortedData.filter((_, i) => !isPredictedFlags[i]),
+        customdata: sortedData.filter((_, i) => !isPredictedFlags[i]).map(val => val.toLocaleString(locale)),
+        mode: 'lines+markers',
+        name: 'Actual Prices',
+        type: 'scatter',
+        line: { color: colorActual, width: 2 },
+        marker: { color: colorActual },
+        hovertemplate: hovertemplate
+    };
+
+    // Trace 2: Predicted prices
+    const tracePredicted = {
+        x: sortedLabels.filter((_, i) => isPredictedFlags[i]),
+        y: sortedData.filter((_, i) => isPredictedFlags[i]),
+        customdata: sortedData.filter((_, i) => isPredictedFlags[i]).map(val => val.toLocaleString(locale)),
+        mode: 'lines+markers',
+        name: 'Predicted Prices',
+        type: 'scatter',
+        line: { color: colorPredicted, width: 2, dash: 'dot' },
+        marker: { color: colorPredicted },
+        hovertemplate: 'Date: %{x}<br>Value: %{customdata}<extra></extra>'
+    };
+
+    const layout = {
+        showlegend: false,
+        margin: {
+            l: 70,
+            r: 20,
+            t: 40,
+            b: 40
+        },
+        xaxis: {
+            gridcolor: '#ddd',
+            tickfont: { size: 10, family: 'Arial, sans-serif' },
+            ticks: 'outside',
+            tickformat: dateFormat[lang],
+            showgrid: true
+        },
+        yaxis: {
+            tickvals: tickvals,
+            ticktext: ticktext,
+            tickfont: { size: 10, family: 'Arial, sans-serif' },
+            ticks: 'outside',
+            gridcolor: '#ddd',
+            showgrid: true
+        },
+        hoverlabel: {
+            font: { color: 'white' },
+            bgcolor: '#2563eb',
+            bordercolor: 'white',
+            borderwidth: 1
+        },
+        dragmode: 'zoom',
+        transition: {
+            duration: 500,
+            easing: 'quad-in-out'
+        }
+    };
+
+    Plotly.newPlot('chart', [traceActual, tracePredicted], layout);
+</script>
+
+<script class="language-switch">
+    document.querySelectorAll('.lang-option').forEach(item => {
+        item.addEventListener('click', function (e) {
+            e.preventDefault();
+            const selectedLang = this.getAttribute('data-lang');
+            const issuer = document.querySelector('[name="issuer"]');
+            const timeframe = document.querySelector('[name="timeframe"]');
+
+
+
+
+            const queryParams = {
+    "issuer": issuer ? issuer.value : null,
+    "timeframe": timeframe ? timeframe.value : null,
+};
+
+            // Save to session
+            fetch('/save_query_params/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()  // make sure you have a csrf token function
+                },
+                body: JSON.stringify(queryParams)
+            }).then(response => {
+                // After saving, redirect to new language URL
+                if (response.ok) {
+                    window.location.href = '/' + selectedLang + window.location.pathname.substring(3);
+                    // assumes your URLs are prefixed like /en/, /mk/, etc.
+                }
+            });
+        });
+    });
+
+
+    function getCSRFToken() {
+      let cookieValue = null;
+      const name = 'csrftoken';
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+</script>
+{% endblock %}

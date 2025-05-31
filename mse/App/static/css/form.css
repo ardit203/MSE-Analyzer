@@ -1,0 +1,50 @@
+label {
+    font-weight: 500;
+    color: var(--text-light) !important;
+    margin-bottom: 0.5rem;
+}
+
+.card {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.btn-dsg {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-dsg:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-1px);
+    box-shadow: var(--card-shadow);
+    color: white;
+}
+
+.form-control, .form-select {
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+
+
+
+
+@media (max-width: 430px) {
+    button, input, select, .fnt {
+        font-size: 1rem !important;
+    }
+}

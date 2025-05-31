@@ -1,0 +1,103 @@
+.hero-section {
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        padding: 18vh 0;
+        margin: 0 -30vh 3rem -30vh;
+        overflow: hidden;
+    }
+
+
+    .hero-section::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    }
+
+
+    .hero-content {
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        padding: 2rem;
+        background: linear-gradient(
+                to right,
+                rgba(37, 99, 235, 0.95), /* --primary-color with 60% opacity */ rgba(30, 64, 175, 0.95) /* --secondary-color with 60% opacity */
+        );
+        border-radius: 1rem;
+    }
+
+    .hero-image {
+        position: relative;
+        padding: 1rem;
+    }
+
+    .hero-image img {
+        border-radius: 1rem;
+        box-shadow: var(--card-shadow);
+        transition: transform 0.3s ease;
+    }
+
+    .hero-image:hover img {
+        transform: translateY(-5px);
+    }
+
+
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+    }
+
+    @media (max-width: 992px) {
+        .hero-section {
+            margin: 0 -1rem 3rem -1rem;
+            padding: 3rem 0;
+        }
+
+        .hero-content {
+            text-align: center;
+            padding-right: 0;
+            margin-bottom: 2rem;
+        }
+
+        .hero-image {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 1rem 0;
+        }
+
+        .hero-content h1 {
+            font-size: 2rem;
+        }
+
+        .hero-content p {
+            font-size: 1rem;
+        }
+
+        .hero-content a {
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .hero-content {
+            padding: 0.6rem;
+            margin-top: 1rem;
+        }
+
+        .hero-content .btn-lg {
+            width: 100%;
+            margin-bottom: 0.6rem;
+        }
+
+        .hero-content .d-flex {
+            flex-direction: column;
+        }
+    }

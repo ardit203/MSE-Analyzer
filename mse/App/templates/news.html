@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}{{lang_data.fundamental.title}}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/news.css'%}">
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container-fluid p-0 mt-5 news-container">
+    <a href="{% url 'fundamental' lang %}" class="back-button switch" data-issuer="{{new.code}}">
+        <i class="fas fa-arrow-left"></i>
+        <span>{{lang_data.fundamental.news.go_back}}</span>
+    </a>
+
+    {% if new %}
+    <div class="row">
+
+        <div class="col-md">
+            <div class="card shadow news-card">
+                <div class="card-header">
+                    <h5 class="card-title">{{ new.title }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="news-meta">
+                        <span><i class="fas fa-calendar"></i><span
+                                class="format-date ps-1"> {{ new.date }}</span></span>
+                        {% if new.document_id %}
+                        <span><i class="fas fa-newspaper"></i> {{ new.document_id }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="news-description">
+                        {{ new.content|safe }}
+                    </div>
+
+                    {% if attachments %}
+                    <div class="attachments-section">
+                        <h6 class="mb-3">{{lang_data.fundamental.news.attachments}}</h6>
+                        {% for attachment in attachments %}
+                        <div class="attachment-item">
+                            <div class="attachment-icon">
+                                {% if attachment.type == 'pdf' %}
+                                <i class="fas fa-file-pdf"></i>
+                                {% elif attachment.type == 'doc' %}
+                                <i class="fas fa-file-word"></i>
+                                {% elif attachment.type == 'xlsx' %}
+                                <i class="fas fa-file-excel"></i>
+                                {% else %}
+                                <i class="fas fa-file"></i>
+                                {% endif %}
+                            </div>
+                            <div class="attachment-info">
+                                <h6 class="attachment-title">{{ attachment.file_name }}</h6>
+                                <span class="attachment-type">{{ attachment.type|upper }}</span>
+                            </div>
+                            <a href="{{ attachment.attachment_link }}" class="attachment-link" target="_blank">
+                                <i class="fas fa-download"></i> {{lang_data.fundamental.news.download}}
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="no-news">
+        <i class="fas fa-newspaper"></i>
+        <h4>No News Available</h4>
+        <p>There are no news articles to display at the moment.</p>
+    </div>
+    {% endif %}
+</div>
+
+
+<script class="language-switch">
+    document.querySelectorAll('.switch').forEach(item => {
+        item.addEventListener('click', function (e) {
+            e.preventDefault();
+            const issuer = this.dataset.issuer;
+            console.log(issuer)
+            const targetUrl = this.getAttribute('href');  // {% url 'fundamental' lang %}
+
+            const queryParams = {
+            "issuer": issuer || null,
+        };
+
+            fetch('/save_query_params/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify(queryParams)
+            }).then(() => {
+                // After session is updated, go to fundamental page
+                window.location.href = targetUrl;
+            });
+        });
+    });
+
+
+    function getCSRFToken() {
+        let cookieValue = null;
+        const name = 'csrftoken';
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    document.querySelectorAll('.lang-option').forEach(item => {
+        item.addEventListener('click', function (e) {
+            e.preventDefault();
+            const selectedLang = this.getAttribute('data-lang');
+            window.location.href = '/' + selectedLang + window.location.pathname.substring(3);
+        })
+    });
+</script>
+{% endblock %}

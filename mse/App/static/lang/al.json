@@ -1,0 +1,205 @@
+{
+  "nav": {
+    "home": "Ballina",
+    "issuers_data": "Të dhënat e emetuesve",
+    "visualization": "Vizualizim",
+    "technical": "Analizë Teknike",
+    "fundamental": "Analizë Themelore",
+    "prediction": "Parashikim",
+    "language": "Gjuha"
+  },
+  "home": {
+    "title": "Ballina",
+    "hero": {
+      "welcome": "Mirë se vini në MSE Analyzer",
+      "text": "Platforma juaj gjithëpërfshirëse për analizimin dhe kuptimin e tregut të Bursës së Maqedonisë. Merrni njohuri në kohë reale, analiza të avancuara dhe merrni vendime të informuara për investime.",
+      "view_analytics": "Shiko Analizat",
+      "market_predictions": "Parashikime të Tregut"
+    },
+    "features": {
+      "title": "Veçoritë",
+      "issuers_data": {
+        "title": "Të dhënat e emetuesve",
+        "content": "Qasuni të dhënave të detajuara dhe historike për performancën e aksioneve të kompanive të listuara në Maqedoni, duke përfshirë ndryshimet e çmimit, vëllimin e tregtisë dhe statistikat kyçe financiare.",
+        "button": "Shko te Të dhënat e emetuesve"
+      },
+      "visualization": {
+        "title": "Vizualizim",
+        "content": "Eksploroni njohuritë përmes grafikëve dhe diagrameve interaktive për të kuptuar më mirë performancën e aksioneve, trendet historike dhe luhatjet e tregut gjatë periudhave të ndryshme kohore.",
+        "button": "Shko te Vizualizimi"
+      },
+      "technical": {
+        "title": "Analizë Teknike",
+        "content": "Zhytuni thellë në sjelljen e tregut duke përdorur indikatorë teknikë të avancuar si mesataret lëvizëse dhe oscilatorët për të kuptuar më mirë lëvizjet e mundshme të çmimit në të ardhmen.",
+        "button": "Shko te Analiza Teknike"
+      },
+      "fundamental": {
+        "title": "Analizë Themelore",
+        "content": "Vlerësoni performancën e kompanive duke analizuar artikuj të lajmeve, indikatorë ekonomikë dhe njoftime nga kompanitë për të gjeneruar njohuri për investime afatgjata.",
+        "button": "Shko te Analiza Themelore"
+      },
+      "prediction": {
+        "title": "Parashikim",
+        "content": "Përdorni modele të të mësuarit makinerik të bazuara në LSTM për të gjeneruar parashikime inteligjente për lëvizjet e ardhshme të çmimit të aksioneve bazuar në të dhënat dhe trendet historike.",
+        "button": "Shko te Parashikimet"
+      }
+    },
+    "stats": {
+      "title": "Statistikat Aktual",
+      "table": {
+        "issuer": "Emetuesi",
+        "avg": "Çm. Mes.",
+        "chg": "% Ndrysh.",
+        "turnover": "Qarkullimi (BEST)"
+      },
+      "statistics": {
+        "title": "Statistikat e Tregut",
+        "date": "Data",
+        "total": "Qarkullimi Total",
+        "expensive": "Aksioni më i shtrenjtë",
+        "cheap": "Aksioni më i lirë",
+        "max_chg": "Rritja më e madhe përqindje",
+        "min_chg": "Rënia më e madhe përqindje",
+        "winners": "Fituesit",
+        "losers": "Humbësit",
+        "neutral": "Pa Ndryshim Çmimi",
+        "exchange": "Kurset e Këmbimit"
+      }
+    }
+  },
+  "issuers_data": {
+    "title": "Të dhënat e emetuesve",
+    "content": {
+      "date": "Data",
+      "price": "Çmimi i fundit i tregtisë",
+      "max": "Maksimumi",
+      "min": "Minimumi",
+      "avg": "Çm. Mes.",
+      "chg": "% Ndrysh.",
+      "volume": "Vëllimi",
+      "turnover": "Qarkullimi (BEST)",
+      "total_turnover": "Qarkullimi Total"
+    }
+  },
+  "visualization": {
+    "title": "Vizualizim",
+    "chart": {
+      "price": "Çmimi i Fundit",
+      "max": "Maksimumi",
+      "min": "Minimumi",
+      "avg": "Çm. Mes.",
+      "chg": "% Ndrysh.",
+      "volume": "Vëllimi",
+      "turnover": "Qarkullimi (BEST)",
+      "total": "Qarkullimi Total"
+    }
+  },
+  "technical": {
+    "title": "Analizë Teknike",
+    "chart": "Vizualizim me Grafik Kandilash",
+    "tech_summary": "Përmbledhje e Analizës Teknike",
+    "ma": "Mesatare Lëvizëse",
+    "osc": "Oscilatorë",
+    "ma_summary": "Përmbledhje e Mesatareve Lëvizëse",
+    "ma_summary_short": "Përmbledhje e Mesatareve Lëvizëse",
+    "osc_summary": "Përmbledhje e Oscilatorëve",
+    "overall_summary": "Përmbledhje e Përgjithshme",
+    "buy": "Bli",
+    "sell": "Shit",
+    "hold": "Mbaj",
+    "table": {
+      "indicator": "Indikatori",
+      "timeframe": "Periudha",
+      "value": "Vlera",
+      "signal": "Sinjali"
+    },
+    "indicator": {
+      "sma": "Mesatare Lëvizëse e Thjeshtë",
+      "ema": "Mesatare Lëvizëse Eksponenciale",
+      "hma": "Mesatare Lëvizëse Hull",
+      "wma": "Mesatare Lëvizëse e Peshëzuar",
+      "tema": "Mesatare Lëvizëse Triple Eksponenciale",
+      "rsi": "Indeksi i Fuqisë Relative",
+      "cci": "Indeksi i Kanalit të Mallrave",
+      "cmo": "Ocilatori i Momentit Chande",
+      "wpr": "Williams %R",
+      "kvo": "Ocilatori i Vëllimit Klinger"
+    },
+    "timeframe": {
+      "1d": "1 Ditë",
+      "1w": "1 Javë",
+      "1m": "1 Muaj",
+      "14d": "14 Ditë"
+    }
+  },
+  "fundamental": {
+    "title": "Analizë Themelore",
+    "sentiment_title": "Analizë e Ndjenjës së Tregut",
+    "news_title": "Lajme",
+    "news_no_content": "Aktualisht nuk ka përmbajtje të detajuar për këtë artikull lajmesh. Megjithatë, mund të kontrolloni skedarët e bashkëngjitur për më shumë informacione.",
+    "read_more": "Lexo më shumë",
+    "sentiment": {
+      "positive": "Analiza e ndjenjës tregtare tregoi një perspektivë pozitive, duke sugjeruar një rekomandim për të blerë aksione të këtij emetuesi.",
+      "negative": "Pas shqyrtimit të informacionit të fundit, analiza e ndjenjës është negative, që nënkupton një rekomandim për të shitur ose për të shmangur investime të mëtejshme për momentin.",
+      "neutral": "Analiza e ndjenjës është neutrale, duke pasqyruar perspektiva të balancuara në informacionin e disponueshëm dhe duke sugjeruar mbajtjen e pozicioneve aktuale pa ndryshime të mëdha.",
+      "no_news": "Aktualisht nuk ka artikuj të rinj të lajmeve. Për këtë arsye, nuk është e mundur të kryhet një analizë e besueshme e ndjenjës së tregut.",
+      "note": "Shënim: Mund të ketë lajme për emetuesin, por ato përmbajnë vetëm bashkëngjitje pa ndonjë përmbajtje tekstuale."
+    },
+    "issuer": "Emetuesi",
+    "news": {
+      "go_back": "Kthehu Mbrapa",
+      "attachments": "Bashkëngjitje",
+      "download": "Shkarko"
+    }
+  },
+  "prediction": {
+    "title": "Parashikim",
+    "price_chart": "Grafiku i Parashikimit",
+    "model_metrics": "Metrika",
+    "timeframe": "Periudha",
+    "issuer": "Emetuesi",
+    "predicted_prices": "Çmimet e Parashikuara",
+    "last_prices": "Çmimet nga 30 Ditët e Fundit",
+
+    "table": {
+      "date": "Data",
+      "pred_price": "Çmimi i Parashikuar",
+      "price": "Çmimi"
+    },
+    "metrics": {
+      "mse": "Gabimi Mesatar Katror",
+      "mae": "Gabimi Mesatar Absolut",
+      "mape": "Gabimi Mesatar Absolut përqindje",
+      "msle": "Gabimi Mesatar Katror Logaritmik",
+      "r2_score": "Vlera R2",
+      "max": "Gabimi Maksimal"
+    }
+  },
+  "form_select": "Emetuesi",
+  "form_from_date": "Prej Datës",
+  "form_to_date": "Deri më",
+  "issuers_data_button": "Kërko",
+  "analyze_button": "Analizo",
+"predict_button": "Parashiko",
+"hover_template": {
+  "date": "Data",
+  "value": "Vlera",
+  "open": "Hapje",
+  "close": "Mbyllje",
+  "high": "Maksimum",
+  "low": "Minimum"
+},
+
+  "footer": {
+    "text": "Platforma juaj gjithëpërfshirëse për analiza tregu dhe njohuri financiare. Fuqizimi i investitorëve me vendime të bazuara në të dhëna.",
+    "home": "Ballina",
+    "issuers_data": "Të dhënat e emetuesve",
+    "visualization": "Vizualizim",
+    "technical": "Analizë Teknike",
+    "fundamental": "Analizë Themelore",
+    "prediction": "Parashikim",
+    "language": "Gjuha",
+    "contact": "Na Kontaktoni",
+    "rights_reserved": "Të gjitha të drejtat e rezervuara"
+  }
+}

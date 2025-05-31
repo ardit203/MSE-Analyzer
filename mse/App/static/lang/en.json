@@ -1,0 +1,205 @@
+{
+  "nav": {
+    "home": "Home",
+    "issuers_data": "Issuers Data",
+    "visualization": "Visualization",
+    "technical": "Technical Analysis",
+    "fundamental": "Fundamental Analysis",
+    "prediction": "Prediction",
+    "language": "Language"
+  },
+  "home": {
+    "title": "Home",
+    "hero": {
+      "welcome": "Welcome to MSE Analyzer",
+      "text": "Your comprehensive platform for analyzing and understanding the Macedonian Stock Exchange market. Get real-time insights, advanced analytics, and make informed investment decisions.",
+      "view_analytics": "View Analytics",
+      "market_predictions": "Market Predictions"
+    },
+
+    "features": {
+      "title": "Features",
+      "issuers_data": {
+        "title": "Issuers Data",
+        "content": "Access detailed and historical stock performance data for listed Macedonian companies, including price changes, trading volume, and key financial statistics.",
+        "button": "Go to Issuers Data"
+      },
+      "visualization": {
+        "title": "Visualization",
+        "content": "Explore visual insights through interactive charts and graphs to better understand stock performance, historical trends, and market fluctuations over different timeframes.",
+        "button": "Go to Visualization"
+      },
+      "technical": {
+        "title": "Technical Analysis",
+        "content": "Dive deep into market behavior using advanced technical indicators such as moving averages and oscillators tools to better understand potential future price movements",
+        "button": "Go to Technical Analysis"
+      },
+      "fundamental": {
+        "title": "Fundamental Analysis",
+        "content": "Evaluate company performance by analyzing news articles, economic indicators, and company announcements to generate long-term investment insights.",
+        "button": "Go to Fundamental Analysis"
+      },
+      "prediction": {
+        "title": "Prediction",
+        "content": "Leverage LSTM-based machine learning models to generate intelligent forecasts of future stock price movements based on historical data patterns and trends.",
+        "button": "Go to Prediction"
+      }
+    },
+    "stats": {
+      "title": "Current Stats",
+      "table": {
+        "issuer": "Issuer",
+        "avg": "Avg.Price",
+        "chg": "%chg.",
+        "turnover": "Turnover (BEST)"
+      },
+      "statistics": {
+        "title": "Market Stats",
+        "date": "Date",
+        "total": "Total Turnover",
+        "expensive": "Most Expensive Share",
+        "cheap": "Cheapest Share",
+        "max_chg": "Most Percentage Increase",
+        "min_chg": "Most Percentage Decrease",
+        "winners": "Winners",
+        "losers": "Losers",
+        "neutral": "No Price Changes",
+        "exchange": "Exchange Rates"
+      }
+    }
+  },
+  "issuers_data": {
+    "title": "Issuers Data",
+    "content": {
+      "date": "Date",
+      "price": "Last Trade Price",
+      "max": "Max",
+      "min": "Min",
+      "avg": "Avg.Price",
+      "chg": "%chg.",
+      "volume": "Volume",
+      "turnover": "Turnover (BEST)",
+      "total_turnover": "Total Turnover"
+    }
+  },
+  "visualization": {
+    "title": "Visualization",
+    "chart": {
+      "price": "Last Price",
+      "max": "Max",
+      "min": "Min",
+      "avg": "Avg.Price",
+      "chg": "%chg.",
+      "volume": "Volume",
+      "turnover": "Turnover (BEST)",
+      "total": "Total Turnover"
+    }
+  },
+  "technical": {
+    "title": "Technical Analysis",
+    "chart": "Candlestick Chart Visualization",
+    "tech_summary": "Technical Analysis Summary",
+    "ma": "Moving Averages",
+    "osc": "Oscillators",
+    "ma_summary_short": "M.A. Summary",
+    "ma_summary": "Moving Averages Summary",
+    "osc_summary": "Oscillators Summary",
+    "overall_summary": "Overall Summary",
+    "buy": "Buy",
+    "sell": "Sell",
+    "hold": "Hold",
+    "table": {
+      "indicator": "Indicator",
+      "timeframe": "Timeframe",
+      "value": "Value",
+      "signal": "Signal"
+    },
+    "indicator": {
+      "sma": "Simple Moving Average",
+      "ema": "Exponential Moving Average",
+      "hma": "Hull Moving Average",
+      "wma": "Weighted Moving Average",
+      "tema": "Triple Exponential Moving Average",
+      "rsi": "Relative Strength Index",
+      "cci": "Commodity Channel Index",
+      "cmo": "Chande Momentum Oscillator",
+      "wpr": "Williams %R",
+      "kvo": "Klinger Volume Oscillator"
+    },
+    "timeframe": {
+      "1d": "1 Day",
+      "1w": "1 Week",
+      "1m": "1 Month",
+      "14d": "14 Days"
+    }
+  },
+  "fundamental": {
+    "title": "Fundamental Analysis",
+    "sentiment_title": "Sentiment Analysis",
+    "news_title": "News",
+    "news_no_content": "No detailed content is available for this news article at the moment. However, you can check the attached files for more information.",
+    "read_more": "Read More",
+    "sentiment": {
+      "positive": "The sentiment analysis conducted yielded a positive outlook, suggesting a recommendation to consider buying shares of this issuer.",
+      "negative": "After reviewing recent information, the sentiment analysis is negative, which indicates a recommendation to consider selling or avoiding additional investment at this time.",
+      "neutral": "The sentiment analysis is neutral, reflecting balanced perspectives in the available information and implying a recommendation to hold current positions without making significant changes.",
+      "no_news": "Currently, there are no recent news articles available. As a result, it is not possible to perform a reliable sentiment analysis at this time.",
+      "note": "Note: There may be news articles available for the issuer, but they contain only attachments without any textual content."
+    },
+    "issuer": "Issuer",
+    "news": {
+      "go_back": "Go Back",
+      "attachments": "Attachments",
+      "download": "Download"
+    }
+  },
+  "prediction": {
+    "title": "Prediction",
+    "price_chart": "Prediction Chart",
+    "model_metrics": "Metrics",
+    "timeframe": "Timeframe",
+    "issuer": "Issuer",
+    "predicted_prices": "Predicted Prices",
+    "last_prices": "Prices from the last 30 Days",
+    "table": {
+      "date": "Date",
+      "pred_price": "Predicted Price",
+      "price": "Price"
+    },
+    "metrics": {
+      "mse": "Mean Squared Error",
+      "mae": "Mean Absolute Error",
+      "mape": "Mean Absolute percentage Error",
+      "msle": "Mean Squared Log Error",
+      "r2_score": "R2 Score",
+      "max": "Max Error"
+    }
+  },
+  "form_select": "Issuer",
+  "form_from_date": "From Date",
+  "form_to_date": "To Date",
+  "issuers_data_button": "Find",
+  "analyze_button": "Analyze",
+  "predict_button": "Predict",
+  "hover_template": {
+    "date": "Date",
+    "value": "Value",
+    "open": "Open",
+    "close": "Close",
+    "high": "High",
+    "low": "Low"
+  },
+
+  "footer": {
+    "text": "Your comprehensive platform for market analysis and financial insights. Empowering investors with data-driven decisions.",
+    "home": "Home",
+    "issuers_data": "Issuers Data",
+    "visualization": "Visualization",
+    "technical": "Technical Analysis",
+    "fundamental": "Fundamental Analysis",
+    "prediction": "Prediction",
+    "language": "Language",
+    "contact": "Contact Us",
+    "rights_reserved": "Rights Reserved"
+  }
+}

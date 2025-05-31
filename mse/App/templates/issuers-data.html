@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% load static%}
+
+{% block title %}{{lang_data.issuers_data.title}}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/form.css'%}">
+<link rel="stylesheet" href="{% static 'css/issuers-table.css'%}">
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid p-0 default-down">
+    <h2 class="p-0 mt-5 txt-secondary">{{lang_data.issuers_data.title}}</h2>
+    <div class="card shadow borders mt-5">
+        <div class="card-body">
+            <form id="filter-form" method="post" action="{% url 'issuers-data' lang %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        {{ form.issuer.label_tag }}
+                        {{form.issuer}}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.start_date.label_tag }}
+                        {{form.start_date}}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.end_date.label_tag }}
+                        {{form.end_date}}
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="btn px-4 btn-dsg borders shadow-sm">🔍
+                            <span>{{lang_data.issuers_data_button}}</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="shadow bg-white tab-cont table-responsive mt-5 mb-5">
+    {% if data %}
+    <table class="table table-modern m-0">
+        <thead>
+        <tr>
+            <th class="">{{lang_data.issuers_data.content.date}}</th>
+            <th>{{lang_data.issuers_data.content.price}}</th>
+            <th>{{lang_data.issuers_data.content.max}}</th>
+            <th>{{lang_data.issuers_data.content.min}}</th>
+            <th>{{lang_data.issuers_data.content.avg}}</th>
+            <th>{{lang_data.issuers_data.content.chg}}</th>
+            <th>{{lang_data.issuers_data.content.volume}}</th>
+            <th>{{lang_data.issuers_data.content.turnover}}</th>
+            <th>{{lang_data.issuers_data.content.total_turnover}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for datum in data %}
+        <tr>
+            <td class="date format-date">{{ datum.date }}</td>
+            <td class="price format-decimal">{{ datum.price }}</td>
+            <td class="max format-decimal">{{ datum.max }}</td>
+            <td class="min format-decimal">{{ datum.min }}</td>
+            <td class="avg format-decimal">{{ datum.avg }}</td>
+            <td class="chg format-decimal {% if datum.chg > 0 %}positive{% elif datum.chg < 0 %}negative{% else %}neutral{% endif %}">{{ datum.chg }}</td>
+            <td class="volume format-number">{{ datum.volume }}</td>
+            <td class="turnover format-number">{{ datum.turnover }}</td>
+            <td class="total-turnover format-number">{{ datum.total_turnover }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-warning text-center m-0 p-5" role="alert">
+        No data available for the selected period.
+    </div>
+    {% endif %}
+</div>
+</div>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Format date inputs
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    dateInputs.forEach(input => {
+        // Set the display format
+        input.addEventListener('change', function() {
+            if (this.value) {
+                const date = new Date(this.value);
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                this.setAttribute('data-date', `${day}/${month}/${year}`);
+            }
+        });
+
+        // Trigger change event if there's a value
+        if (input.value) {
+            input.dispatchEvent(new Event('change'));
+        }
+    });
+});
+</script>
+
+<script class="language-switch">
+
+    document.querySelectorAll('.lang-option').forEach(item => {
+        item.addEventListener('click', function (e) {
+            e.preventDefault();
+            const selectedLang = this.getAttribute('data-lang');
+            const issuer = document.querySelector('[name="issuer"]');
+            const start_date = document.querySelector('[name="start_date"]');
+            const end_date = document.querySelector('[name="end_date"]');
+
+
+
+            const queryParams = {
+    "issuer": issuer ? issuer.value : null,
+    "start_date": start_date ? start_date.value : null,
+    "end_date": end_date ? end_date.value : null
+};
+
+            // Save to session
+            fetch('/save_query_params/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()  // make sure you have a csrf token function
+                },
+                body: JSON.stringify(queryParams)
+            }).then(response => {
+                // After saving, redirect to new language URL
+                if (response.ok) {
+                    window.location.href = '/' + selectedLang + window.location.pathname.substring(3);
+                    // assumes your URLs are prefixed like /en/, /mk/, etc.
+                }
+            });
+        });
+    });
+
+
+    function getCSRFToken() {
+      let cookieValue = null;
+      const name = 'csrftoken';
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+</script>
+
+{% endblock %}

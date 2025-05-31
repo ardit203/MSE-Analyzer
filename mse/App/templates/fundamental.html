@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}{{lang_data.fundamental.title}}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/form.css'%}">
+<link rel="stylesheet" href="{% static 'css/modern-card.css'%}">
+<!--<link rel="stylesheet" href="{% static 'css/news-cards.css'%}">-->
+<style>
+    .odd {
+        background: linear-gradient(to left, var(--primary-color), var(--secondary-color)) !important;
+    }
+
+    .positive {
+        color: #059669 !important;
+        background-color: rgba(5, 150, 105, 0.1) !important;
+    }
+
+    .negative {
+        color: #DC2626 !important;
+        background-color: rgba(220, 38, 38, 0.1) !important;
+    }
+
+    .neutral {
+        background-color: #f0f0f0;
+        color: #555555;
+    }
+
+    .no-comment {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .radius {
+        border-radius: 1rem;
+    }
+
+
+    .style-row {
+        display: flex;
+        flex-wrap: wrap;
+
+    }
+
+    .style-row > .style-column {
+        display: flex;
+    }
+
+    .card-modern {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+    }
+</style>
+{% endblock %}
+
+{% block page_title %}{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid p-0 mt-5">
+    <h2 class="p-0 mt-5 txt-secondary">{{lang_data.fundamental.title}}</h2>
+    <div class="card shadow borders mt-5">
+        <div class="card-body">
+            <form id="filter-form" method="post" action="{% url 'fundamental' lang %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row g-3 justify-content-center">
+                    <div class="col-md-4">
+                        {{ form.issuer.label_tag }}
+                        {{form.issuer}}
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="btn px-4 btn-dsg borders shadow-sm">🔍
+                            <span>{{lang_data.analyze_button}}</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+
+
+<div class="container-fluid p-0 default-up default-down default-up">
+    <h2 class="p-0 mt-5 txt-secondary">{{lang_data.fundamental.sentiment_title}}</h2>
+    <div class="container-fluid p-0 mt-5">
+    <div class="card shadow borders">
+        {% if sentiment.label == "POSITIVE" %}
+        <div class="card-body radius positive">
+            <h5 class="p-0 text-center mt-3 mb-3">{{lang_data.fundamental.sentiment.positive}}</h5>
+        </div>
+        {% elif sentiment.label == "NEGATIVE" %}
+        <div class="card-body radius negative">
+            <h5 class="p-0 text-center mt-3 mb-3">{{lang_data.fundamental.sentiment.negative}}</h5>
+        </div>
+        {% elif sentiment.label == "NEUTRAL" %}
+        <div class="card-body radius neutral">
+            <h5 class="p-0 text-center mt-3 mb-3">{{lang_data.fundamental.sentiment.neutral}}</h5>
+        </div>
+        {% else %}
+        <div class="card-body radius no-comment">
+            <h5 class="p-0 text-center mt-3 mb-5">{{lang_data.fundamental.sentiment.no_news}}</h5>
+            <span class="pt-3">{{lang_data.fundamental.sentiment.note}}</span>
+        </div>
+        {%endif%}
+    </div>
+</div>
+</div>
+
+<!---->
+
+<div class="container-fluid p-0 default-up default-down default-up">
+
+    <h2 class="p-0 mt-5 txt-secondary">{{lang_data.fundamental.news_title}}</h2>
+    {% if data %}
+    <div class="row g-4 mt-3 style-row">
+    <!-- Card 1: Feature Card -->
+    {% for datum in data %}
+    <div class="col-md-6 col-lg-6 col-xxl-4 style-column style-column">
+        <div class="card-modern">
+            <div class="card-header {% if forloop.counter0|divisibleby:2 %}even{% else %}odd{% endif %}">
+                <div class="card-icon news-icon">
+                    <span>{{datum.code}}</span>
+
+                </div>
+                <h3 class="h5 mb-0">{{datum.title}}</h3>
+            </div>
+            <div class="card-body">
+                {% if datum.content %}
+                <p>{{ datum.content|truncatechars:163 }}</p>
+                {% else %}
+                <p>{{lang_data.fundamental.news_no_content}}</p>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <div class="d-flex align-items-center">
+                    <div class="card-stats">
+                        <i class="fas fa-clock"></i>
+                        <span class="format-date">{{ datum.date }}</span>
+                    </div>
+
+                    <a href="{%url 'news' lang datum.code datum.document_id%}"
+                       class="btn btn-link ms-auto text-decoration-none">{{lang_data.fundamental.read_more}} <i
+                            class="fas fa-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {%endfor%}
+
+
+</div>
+    {% else %}
+    <div class=" shadow  card-modern mt-5">
+        <div class="alert alert-warning text-center m-0 p-5" role="alert">
+            No news available.
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script class="language-switch">
+
+    document.querySelectorAll('.lang-option').forEach(item => {
+        item.addEventListener('click', function (e) {
+            e.preventDefault();
+            const selectedLang = this.getAttribute('data-lang');
+            const issuer = document.querySelector('[name="issuer"]');
+
+
+            const queryParams = {
+                "issuer": issuer ? issuer.value : null,
+            };
+
+            // Save to session
+            fetch('/save_query_params/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()  // make sure you have a csrf token function
+                },
+                body: JSON.stringify(queryParams)
+            }).then(response => {
+                // After saving, redirect to new language URL
+                if (response.ok) {
+                    window.location.href = '/' + selectedLang + window.location.pathname.substring(3);
+                    // assumes your URLs are prefixed like /en/, /mk/, etc.
+                }
+            });
+        });
+    });
+
+
+    function getCSRFToken() {
+        let cookieValue = null;
+        const name = 'csrftoken';
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
+
+{% endblock %}

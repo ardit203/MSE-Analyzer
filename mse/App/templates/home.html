@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+
+{% load static%}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/hero.css'%}">
+<link rel="stylesheet" href="{% static 'css/issuers-table.css'%}">
+<link rel="stylesheet" href="{% static 'css/modern-card.css'%}">
+<style>
+    .hero-section {
+        background-image: url("{% static 'images/business.jpg' %}");
+    }
+
+    .hero-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3); /* dark overlay for better contrast */
+        z-index: 1;
+    }
+
+
+    /* Ensure content appears above overlay */
+    .hero-section > * {
+        position: relative;
+        z-index: 2;
+    }
+
+
+    .style-row {
+        display: flex;
+        flex-wrap: wrap;
+
+    }
+
+    .style-row > .style-column {
+        display: flex;
+    }
+
+    .card-modern {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+    }
+
+    .tab-cont {
+    max-height: 580px !important;
+}
+
+    .table-modern td {
+    padding: 0.67rem 1rem;
+}
+    /* =============================================================================*/
+</style>
+
+{% endblock %}
+
+
+{% block title %}Home - MSE Analyzer{% endblock %}
+
+{% block page_title %}{% endblock %}
+
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="display-4 fw-bold mb-4">{{lang_data.home.hero.welcome}}</h1>
+                    <p class="lead mb-4">{{lang_data.home.hero.text}}</p>
+                    <div class="d-flex gap-3">
+                        <a href="{% url 'visualization' lang=lang %}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-chart-line me-2"></i>{{lang_data.home.hero.view_analytics}}
+                        </a>
+                        <a href="{% url 'prediction' lang=lang %}" class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-lightning me-2"></i>{{lang_data.home.hero.market_predictions}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Features Section-->
+<div class="container-fluid p-0 default-down default-up">
+    <h2 class="p-0 mt-5 txt-secondary">{{lang_data.home.features.title}}</h2>
+    <div class="row g-4 mt-3 style-row">
+    <!-- Card 1: Feature Card -->
+    <div class="col-md-6 col-lg-6 col-xxl-4 style-column">
+        <div class="card-modern">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i
+                            class="bi bi-database"></i>
+                </div>
+                <h3 class="h5 mb-0">{{lang_data.home.features.issuers_data.title}}</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">{{lang_data.home.features.issuers_data.content}}</p>
+                <!--                    <div class="card-stats">-->
+                <!--                        <i class="fas fa-clock"></i>-->
+                <!--                        <span>Setup time: 5 minutes</span>-->
+                <!--                    </div>-->
+            </div>
+            <div class="card-footer">
+                <a href="{%url 'issuers-data' lang %}" class="btn btn-primary">{{lang_data.home.features.issuers_data.button}}</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-6 col-xxl-4 style-column">
+        <div class="card-modern">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i
+                            class="bi bi-graph-up"></i>
+                </div>
+                <h3 class="h5 mb-0">{{lang_data.home.features.visualization.title}}</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">{{lang_data.home.features.visualization.content}}</p>
+                <!--                    <div class="card-stats">-->
+                <!--                        <i class="fas fa-clock"></i>-->
+                <!--                        <span>Setup time: 5 minutes</span>-->
+                <!--                    </div>-->
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'visualization' lang%}" class="btn btn-primary">{{lang_data.home.features.visualization.button}}</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-6 col-xxl-4 style-column">
+        <div class="card-modern">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i
+                            class="bi bi-gear"></i>
+                </div>
+                <h3 class="h5 mb-0">{{lang_data.home.features.technical.title}}</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">{{lang_data.home.features.technical.content}}</p>
+                <!--                    <div class="card-stats">-->
+                <!--                        <i class="fas fa-clock"></i>-->
+                <!--                        <span>Setup time: 5 minutes</span>-->
+                <!--                    </div>-->
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'technical' lang%}"
+                   class="btn btn-primary">{{lang_data.home.features.technical.button}}</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-6 col-xxl-4 style-column">
+        <div class="card-modern">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i
+                            class="bi bi-calculator"></i>
+                </div>
+                <h3 class="h5 mb-0">{{lang_data.home.features.fundamental.title}}</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">{{lang_data.home.features.fundamental.content}}</p>
+                <!--                    <div class="card-stats">-->
+                <!--                        <i class="fas fa-clock"></i>-->
+                <!--                        <span>Setup time: 5 minutes</span>-->
+                <!--                    </div>-->
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'fundamental' lang%}" class="btn btn-primary">{{lang_data.home.features.fundamental.button}}</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-6 col-xxl-4 style-column">
+        <div class="card-modern">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i
+                            class="bi bi-lightning"></i>
+                </div>
+                <h3 class="h5 mb-0">{{lang_data.home.features.prediction.title}}</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">{{lang_data.home.features.prediction.content}}</p>
+                <!--                    <div class="card-stats">-->
+                <!--                        <i class="fas fa-clock"></i>-->
+                <!--                        <span>Setup time: 5 minutes</span>-->
+                <!--                    </div>-->
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'prediction' lang%}"
+                   class="btn btn-primary">{{lang_data.home.features.prediction.button}}</a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</div>
+
+<div class="container-fluid p-0 default-down default-up">
+    <h2 class="p-0 mt-5 txt-secondary">{{lang_data.home.stats.title}}</h2>
+    <div class="row g-4 mt-3 justify-content-evenly">
+    <div class="col-md-4 col-xxl-6 col-xl-6 mt-4 ">
+        <div class="shadow bg-white tab-cont table-responsive">
+            {% if data %}
+        <table class="table table-modern m-0">
+            <thead>
+            <tr>
+                <th>{{lang_data.home.stats.table.issuer}}</th>
+                <th>{{lang_data.home.stats.table.avg}}</th>
+                <th>{{lang_data.home.stats.table.chg}}</th>
+                <th>{{lang_data.home.stats.table.turnover}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for datum in data.data %}
+            <tr>
+                <td class="code">{{ datum.code }}</td>
+                <td class="avg format-decimal">{{ datum.avg }}</td>
+                <td class="chg format-decimal {% if datum.chg > 0 %}positive{% elif datum.chg < 0 %}negative{% else %}neutral{% endif %}">
+                    {{ datum.chg }}
+                </td>
+                <td class="turnover format-number">{{ datum.turnover }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="alert alert-warning text-center m-0 p-5" role="alert">
+            No data available for the selected period.
+        </div>
+        {% endif %}
+        </div>
+
+    </div>
+
+    <!-- Market Update Card -->
+    <div class="col-md-4 col-xxl-6 col-xl-6">
+        <div class="card-modern news-card market-update">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="h5 mb-0">{{lang_data.home.stats.statistics.title}}</h3>
+            </div>
+            <div class="card-body">
+                <div class="market-stats">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>{{lang_data.home.stats.statistics.date}}</span>
+                        <span class="format-date">{{data.stats.date}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>{{lang_data.home.stats.statistics.total}}</span>
+                        <span class="format-number">{{data.stats.total}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>{{lang_data.home.stats.statistics.expensive}}</span>
+                        <span class="format-decimal">{{data.stats.expensive}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>{{lang_data.home.stats.statistics.cheap}}</span>
+                        <span class="format-decimal">{{data.stats.cheap}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>{{lang_data.home.stats.statistics.max_chg}}</span>
+                        <span class="format-decimal">{{data.stats.max_chg}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>{{lang_data.home.stats.statistics.min_chg}}</span>
+                        <span class="format-decimal">{{data.stats.min_chg}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>{{lang_data.home.stats.statistics.winners}}</span>
+                        <span>{{data.stats.winners}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>{{lang_data.home.stats.statistics.losers}}</span>
+                        <span>{{data.stats.losers}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>{{lang_data.home.stats.statistics.neutral}}</span>
+                        <span>{{data.stats.neutral}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>{{lang_data.home.stats.statistics.exchange}}</span>
+                        <span>{{data.stats.exchange}}</span>
+                    </div>
+                </div>
+                <!--                <div class="card-stats mt-3">-->
+                <!--                    <i class="fas fa-clock"></i>-->
+                <!--                    <span>Updated 10 minutes ago</span>-->
+                <!--                </div>-->
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+
+<script class="language-switch">
+    document.querySelectorAll('.lang-option').forEach(item => {
+        item.addEventListener('click', function (e) {
+            e.preventDefault();
+            const newLang = this.getAttribute('data-lang');
+
+            // Get current path and replace language code
+            const pathParts = window.location.pathname.split('/').filter(Boolean);
+            if (pathParts.length > 0 && pathParts[0].length === 2) {
+                pathParts[0] = newLang;
+            } else {
+                pathParts.unshift(newLang);
+            }
+            const newPath = '/' + pathParts.join('/');
+
+
+            // Redirect with query parameters
+            window.location.href = newPath;
+        });
+    });
+</script>
+
+
+
+{% endblock %}

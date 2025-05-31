@@ -1,0 +1,284 @@
+.news-container {
+        padding: 2rem 0;
+    }
+
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .back-button:hover {
+        transform: translateX(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+
+    .back-button i {
+        transition: transform 0.3s ease;
+    }
+
+    .back-button:hover i {
+        transform: translateX(-3px);
+    }
+
+    .news-card {
+        border: none;
+        border-radius: 15px;
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        margin-bottom: 1.5rem;
+        background: #fff;
+    }
+
+    .news-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .news-card .card-header {
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        color: white;
+        border-top-left-radius: 15px !important;
+        border-top-right-radius: 15px !important;
+        padding: 1.25rem;
+    }
+
+    .news-card .card-title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .news-card .card-body {
+        padding: 1.5rem;
+    }
+
+    .news-description {
+        color: #4a5568;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .news-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        color: #718096;
+        font-size: 0.875rem;
+    }
+
+    .news-meta i {
+        color: var(--primary-color);
+    }
+
+    .attachments-section {
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+    .attachment-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: white;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        transition: background-color 0.2s ease;
+    }
+
+    .attachment-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .attachment-item:hover {
+        background: #edf2f7;
+    }
+
+    .attachment-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 8px;
+        font-size: 1.25rem;
+    }
+
+    .attachment-info {
+        flex: 1;
+    }
+
+    .attachment-title {
+        font-weight: 500;
+        color: #2d3748;
+        margin: 0;
+        font-size: 0.875rem;
+    }
+
+    .attachment-type {
+        color: #718096;
+        font-size: 0.75rem;
+    }
+
+    .attachment-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        background: rgba(37, 99, 235, 0.1);
+        font-size: 0.875rem;
+        transition: background-color 0.2s ease;
+    }
+
+    .attachment-link:hover {
+        background: rgba(37, 99, 235, 0.2);
+        color: var(--primary-color);
+    }
+
+    .no-news {
+        text-align: center;
+        padding: 3rem;
+        color: #718096;
+    }
+
+    .no-news i {
+        font-size: 3rem;
+        color: #cbd5e0;
+        margin-bottom: 1rem;
+    }
+
+    /* Media Queries for Mobile Devices */
+    @media (max-width: 768px) {
+        .news-container {
+            padding: 1rem 0;
+        }
+
+        .back-button {
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            padding: 0.875rem;
+        }
+
+        .news-card {
+            margin-bottom: 1rem;
+        }
+
+        .news-card .card-header {
+            padding: 1rem;
+        }
+
+        .news-card .card-title {
+            font-size: 1.1rem;
+        }
+
+        .news-card .card-body {
+            padding: 1rem;
+        }
+
+        .news-meta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .news-description {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .attachments-section {
+            padding: 0.75rem;
+        }
+
+        .attachment-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 0.75rem;
+        }
+
+        .attachment-icon {
+            width: 35px;
+            height: 35px;
+            font-size: 1rem;
+        }
+
+        .attachment-info {
+            width: 100%;
+        }
+
+        .attachment-title {
+            font-size: 0.8rem;
+        }
+
+        .attachment-type {
+            font-size: 0.7rem;
+        }
+
+        .attachment-link {
+            width: 100%;
+            text-align: center;
+            padding: 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        .no-news {
+            padding: 2rem 1rem;
+        }
+
+        .no-news i {
+            font-size: 2.5rem;
+        }
+
+        .no-news h4 {
+            font-size: 1.25rem;
+        }
+
+        .no-news p {
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Additional Media Query for Very Small Devices */
+    @media (max-width: 480px) {
+        .news-card .card-header {
+            padding: 0.875rem;
+        }
+
+        .news-card .card-title {
+            font-size: 1rem;
+        }
+
+        .news-description {
+            font-size: 0.9rem;
+        }
+
+        .attachment-item {
+            padding: 0.625rem;
+        }
+
+        .attachment-icon {
+            width: 30px;
+            height: 30px;
+            font-size: 0.875rem;
+        }
+    }
