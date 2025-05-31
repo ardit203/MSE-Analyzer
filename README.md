@@ -7,6 +7,8 @@ git clone https://github.com/ardit203/MSE-Analyzer.git
 
 cd MSE-Analyzer
 ### 2. 🐍 Create a Virtual Environment
+Python version: 3.10
+
 You can do this manually or with the help of these commands:
 
 python -m venv venv 
